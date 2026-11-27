@@ -1,4 +1,6 @@
--- Squad roster (seeded from content/players.json)
+-- Daily Delivery schema. Anyone with the link can play (anonymous sign-ins).
+
+-- Roster of answer options (seeded from content/players.json)
 create table players (
   id       text primary key,           -- 'marco-otto'
   name     text not null,
@@ -12,13 +14,7 @@ create table questions (
   answers   jsonb not null              -- [{ "player": "marco-otto", "runs": 6 }, ...]
 );
 
--- Links a login to a player in the roster
-create table squad_members (
-  user_id    uuid primary key references auth.users on delete cascade,
-  player_id  text not null unique references players(id)
-);
-
--- One daily attempt per player
+-- One attempt per session per day
 create table plays (
   user_id      uuid not null references auth.users on delete cascade,
   date         date not null references questions(date),
@@ -29,39 +25,21 @@ create table plays (
   primary key (user_id, date)
 );
 
-alter table players       enable row level security;
-alter table questions     enable row level security;
-alter table squad_members enable row level security;
-alter table plays         enable row level security;
+alter table players   enable row level security;
+alter table questions enable row level security;
+alter table plays     enable row level security;
 
-create policy "squad reads roster"  on players       for select to authenticated using (true);
-create policy "read own membership" on squad_members for select to authenticated using (user_id = auth.uid());
-create policy "read own plays"      on plays         for select to authenticated using (user_id = auth.uid());
+create policy "players read roster" on players for select to authenticated using (true);
+create policy "read own plays"      on plays   for select to authenticated using (user_id = auth.uid());
+
+-- Table access for the API roles (RLS policies still decide which rows)
+grant usage on schema public to service_role, authenticated;
+
+grant all on players, questions, plays to service_role;   -- seed script
+grant select on players, plays to authenticated;          -- the app
 
 -- questions deliberately has NO policy: the browser can't read it at all.
--- plays has no insert/update policy: only the game functions (next step) write to it.
-
-create function claim_player(p_player_id text)
-returns void
-language plpgsql
-security definer
-set search_path = public
-as $$
-begin
-  if auth.uid() is null then
-    raise exception 'Not signed in';
-  end if;
-
-  insert into squad_members (user_id, player_id)
-  values (auth.uid(), p_player_id);
-exception
-  when unique_violation then
-    raise exception 'That player is already taken';
-end;
-$$;
-
-revoke execute on function claim_player from public, anon;
-grant execute on function claim_player to authenticated;
+-- plays has no insert/update policy: only the game functions below write to it.
 
 -- Today's date in New Zealand (Supabase runs on UTC)
 create function today_nz()
@@ -85,8 +63,8 @@ declare
   v_prompt text;
   v_play   plays;
 begin
-  if not exists (select 1 from squad_members where user_id = auth.uid()) then
-    raise exception 'Pick your name first';
+  if auth.uid() is null then
+    raise exception 'Not signed in';
   end if;
 
   select prompt into v_prompt from questions where date = v_day;
@@ -157,7 +135,7 @@ end;
 $$;
 
 -- The tier board. Only works once you've played (or timed out) today.
-create function get_reveal()
+create or replace function get_reveal()
 returns jsonb
 language plpgsql
 security definer
@@ -187,6 +165,7 @@ begin
                'player', pl.id,
                'name', pl.name,
                'runs', (a->>'runs')::int,
+               'note', a->>'note',
                'picks', (select count(*) from plays x
                          where x.date = v_day and x.guess = pl.id)
              ) order by (a->>'runs')::int desc, pl.name)
