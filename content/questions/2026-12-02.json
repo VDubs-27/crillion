@@ -1,0 +1,27 @@
+{
+  "date": "2026-12-02",
+  "prompt": "Name a 1st XI player who has never scored a 1st XI fifty.",
+  "answers": [
+    { "player": "logan-ferguson", "runs": 6 },
+    { "player": "nishil-patel", "runs": 4 },
+    { "player": "nick-sparg", "runs": 4 },
+    { "player": "nail-moerat", "runs": 4 },
+    { "player": "darcy-taylor", "runs": 2 },
+    { "player": "matthew-sunderland", "runs": 2 },
+    { "player": "thomas-raybould", "runs": 2 },
+    { "player": "connor-maccarthy-morrogh", "runs": 1 },
+    { "player": "alex-waldron", "runs": 1 },
+    { "player": "jayin-bhatt", "runs": 1 },
+    { "player": "archie-postles", "runs": 1 },
+    { "player": "dominic-barker", "runs": 1 },
+    { "player": "olly-linton", "runs": 1 },
+    { "player": "eddie-biss", "runs": 1 },
+    { "player": "shahaab-sajjad", "runs": 0 },
+    { "player": "vikram-varadarajan", "runs": 0 },
+    { "player": "toby-douglas", "runs": 0 },
+    { "player": "luke-harrison", "runs": 0 },
+    { "player": "spike-ruffell", "runs": 0 },
+    { "player": "toby-douglas", "runs": 0 },
+    { "player": "ryan-johnson", "runs": 0 }
+  ]
+}

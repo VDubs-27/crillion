@@ -1,0 +1,20 @@
+{
+  "date": "2026-12-01",
+  "prompt": "Name a player who's taken a 5-fer for Westlake.",
+  "answers": [
+    { "player": "marco-otto", "runs": 6 },
+    { "player": "callum-norris", "runs": 6 },
+    { "player": "sam-kay", "runs": 6 },
+    { "player": "dominic-barker", "runs": 4 },
+    { "player": "anton-aickin", "runs": 4 },
+    { "player": "dylan-de-beer", "runs": 4 },
+    { "player": "nick-sparg", "runs": 4 },
+    { "player": "matthew-ross", "runs": 2 },
+    { "player": "darcy-taylor", "runs": 2 },
+    { "player": "alex-waldron", "runs": 2 },
+    { "player": "shahaab-sajjad", "runs": 1 },
+    { "player": "connor-maccarthy-morrogh", "runs": 1 },
+    { "player": "vikram-varadarajan", "runs": 0 },
+    { "player": "toby-douglas", "runs": 0 }
+  ]
+}

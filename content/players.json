@@ -1,0 +1,730 @@
+[
+  {
+    "id": "ryan-kirkpatrick",
+    "name": "Ryan Kirkpatrick",
+    "aliases": [
+      "ryan kirkpatrick",
+      "kirkpatrick"
+    ]
+  },
+  {
+    "id": "dylan-harle",
+    "name": "Dylan Harle",
+    "aliases": [
+      "dylan harle",
+      "dylan",
+      "harle"
+    ]
+  },
+  {
+    "id": "matthew-pieters",
+    "name": "Matthew Pieters",
+    "aliases": [
+      "matthew pieters",
+      "matthew",
+      "pieters"
+    ]
+  },
+  {
+    "id": "archie-postles",
+    "name": "Archie Postles",
+    "aliases": [
+      "archie postles",
+      "archie",
+      "postles"
+    ]
+  },
+  {
+    "id": "jayin-bhatt",
+    "name": "Jayin Bhatt",
+    "aliases": [
+      "jayin bhatt",
+      "jayin",
+      "bhatt"
+    ]
+  },
+  {
+    "id": "spike-ruffell",
+    "name": "Spike Ruffell",
+    "aliases": [
+      "spike ruffell",
+      "spike",
+      "ruffell"
+    ]
+  },
+  {
+    "id": "rupert-powell",
+    "name": "Rupert Powell",
+    "aliases": [
+      "rupert powell",
+      "rupert",
+      "powell"
+    ]
+  },
+  {
+    "id": "matthew-sunderland",
+    "name": "Matthew Sunderland",
+    "aliases": [
+      "matthew sunderland",
+      "sunderland"
+    ]
+  },
+  {
+    "id": "callum-norris",
+    "name": "Callum Norris",
+    "aliases": [
+      "callum norris",
+      "norris"
+    ]
+  },
+  {
+    "id": "jack-lee",
+    "name": "Jack Lee",
+    "aliases": [
+      "jack lee",
+      "lee"
+    ]
+  },
+  {
+    "id": "rocco-ludolph",
+    "name": "Rocco Ludolph",
+    "aliases": [
+      "rocco ludolph",
+      "rocco",
+      "ludolph"
+    ]
+  },
+  {
+    "id": "nick-sparg",
+    "name": "Nick Sparg",
+    "aliases": [
+      "nick sparg",
+      "sparg"
+    ]
+  },
+  {
+    "id": "mahad-chaudhary",
+    "name": "Mahad Chaudhary",
+    "aliases": [
+      "mahad chaudhary",
+      "mahad",
+      "chaudhary"
+    ]
+  },
+  {
+    "id": "navick-chandra",
+    "name": "Navick Chandra",
+    "aliases": [
+      "navick chandra",
+      "navick",
+      "chandra"
+    ]
+  },
+  {
+    "id": "toby-stroobant",
+    "name": "Toby Stroobant",
+    "aliases": [
+      "toby stroobant",
+      "stroobant"
+    ]
+  },
+  {
+    "id": "nail-moerat",
+    "name": "Na’il Moerat",
+    "aliases": [
+      "nail moerat",
+      "nail",
+      "moerat"
+    ]
+  },
+  {
+    "id": "rustin-langford",
+    "name": "Rustin Langford",
+    "aliases": [
+      "rustin langford",
+      "rustin",
+      "langford"
+    ]
+  },
+  {
+    "id": "siddharth-ghosh",
+    "name": "Siddharth Ghosh",
+    "aliases": [
+      "siddharth ghosh",
+      "siddharth",
+      "ghosh"
+    ]
+  },
+  {
+    "id": "luke-watson",
+    "name": "Luke Watson",
+    "aliases": [
+      "luke watson",
+      "watson"
+    ]
+  },
+  {
+    "id": "leo-harbottle",
+    "name": "Leo Harbottle",
+    "aliases": [
+      "leo harbottle",
+      "leo",
+      "harbottle"
+    ]
+  },
+  {
+    "id": "brady-sylvester",
+    "name": "Brady Sylvester",
+    "aliases": [
+      "brady sylvester",
+      "brady",
+      "sylvester"
+    ]
+  },
+  {
+    "id": "jayden-conn",
+    "name": "Jayden Conn",
+    "aliases": [
+      "jayden conn",
+      "jayden",
+      "conn"
+    ]
+  },
+  {
+    "id": "cambell-brighouse",
+    "name": "Cambell Brighouse",
+    "aliases": [
+      "cambell brighouse",
+      "cambell",
+      "brighouse"
+    ]
+  },
+  {
+    "id": "toby-douglas",
+    "name": "Toby Douglas",
+    "aliases": [
+      "toby douglas",
+      "douglas"
+    ]
+  },
+  {
+    "id": "henry-bond",
+    "name": "Henry Bond",
+    "aliases": [
+      "henry bond",
+      "henry",
+      "bond"
+    ]
+  },
+  {
+    "id": "dylan-de-beer",
+    "name": "Dylan de Beer",
+    "aliases": [
+      "dylan de beer",
+      "dylan",
+      "de beer"
+    ]
+  },
+  {
+    "id": "hunter-vaughan",
+    "name": "Hunter Vaughan",
+    "aliases": [
+      "hunter vaughan",
+      "hunter",
+      "vaughan"
+    ]
+  },
+  {
+    "id": "abdur-kothiwala",
+    "name": "Abdur Kothiwala",
+    "aliases": [
+      "abdur kothiwala",
+      "abdur",
+      "kothiwala"
+    ]
+  },
+  {
+    "id": "ben-pleciak",
+    "name": "Ben Pleciak",
+    "aliases": [
+      "ben pleciak",
+      "ben",
+      "pleciak"
+    ]
+  },
+  {
+    "id": "nicholas-carlyle",
+    "name": "Nicholas Carlyle",
+    "aliases": [
+      "nicholas carlyle",
+      "nicholas",
+      "carlyle"
+    ]
+  },
+  {
+    "id": "aarun-patel",
+    "name": "Aarun Patel",
+    "aliases": [
+      "aarun patel",
+      "aarun"
+    ]
+  },
+  {
+    "id": "miheer-patel",
+    "name": "Miheer Patel",
+    "aliases": [
+      "miheer patel",
+      "miheer"
+    ]
+  },
+  {
+    "id": "sam-kay",
+    "name": "Sam Kay",
+    "aliases": [
+      "sam kay",
+      "kay"
+    ]
+  },
+  {
+    "id": "james-cameron",
+    "name": "James Cameron",
+    "aliases": [
+      "james cameron",
+      "james",
+      "cameron"
+    ]
+  },
+  {
+    "id": "sam-inglis",
+    "name": "Sam Inglis",
+    "aliases": [
+      "sam inglis",
+      "inglis"
+    ]
+  },
+  {
+    "id": "callum-walker",
+    "name": "Callum Walker",
+    "aliases": [
+      "callum walker",
+      "walker"
+    ]
+  },
+  {
+    "id": "matthew-ross",
+    "name": "Matthew Ross",
+    "aliases": [
+      "matthew ross",
+      "ross"
+    ]
+  },
+  {
+    "id": "lucas-rowe",
+    "name": "Lucas Rowe",
+    "aliases": [
+      "lucas rowe",
+      "rowe"
+    ]
+  },
+  {
+    "id": "curtis-marsh",
+    "name": "Curtis Marsh",
+    "aliases": [
+      "curtis marsh",
+      "curtis",
+      "marsh"
+    ]
+  },
+  {
+    "id": "finn-abbott",
+    "name": "Finn Abbott",
+    "aliases": [
+      "finn abbott",
+      "finn",
+      "abbott"
+    ]
+  },
+  {
+    "id": "mani-kharbanda",
+    "name": "Mani Kharbanda",
+    "aliases": [
+      "mani kharbanda",
+      "mani",
+      "kharbanda",
+      "yatharth"
+    ]
+  },
+  {
+    "id": "thomas-mccutcheon",
+    "name": "Thomas McCutcheon",
+    "aliases": [
+      "thomas mccutcheon",
+      "mccutcheon"
+    ]
+  },
+  {
+    "id": "samuel-fraser",
+    "name": "Samuel Fraser",
+    "aliases": [
+      "samuel fraser",
+      "samuel",
+      "fraser"
+    ]
+  },
+  {
+    "id": "dominic-barker",
+    "name": "Dominic Barker",
+    "aliases": [
+      "dominic barker",
+      "dominic",
+      "barker"
+    ]
+  },
+  {
+    "id": "shahaab-sajjad",
+    "name": "Shahaab Sajjad",
+    "aliases": [
+      "shahaab sajjad",
+      "shahaab",
+      "sajjad"
+    ]
+  },
+  {
+    "id": "olly-linton",
+    "name": "Olly Linton",
+    "aliases": [
+      "olly linton",
+      "olly",
+      "linton"
+    ]
+  },
+  {
+    "id": "ansh-patel",
+    "name": "Ansh Patel",
+    "aliases": [
+      "ansh patel",
+      "ansh"
+    ]
+  },
+  {
+    "id": "kishan-mistry",
+    "name": "Kishan Mistry",
+    "aliases": [
+      "kishan mistry",
+      "kishan",
+      "mistry"
+    ]
+  },
+  {
+    "id": "vikram-varadarajan",
+    "name": "Vikram Varadarajan",
+    "aliases": [
+      "vikram varadarajan",
+      "vikram",
+      "varadarajan"
+    ]
+  },
+  {
+    "id": "daniel-barnett",
+    "name": "Daniel Barnett",
+    "aliases": [
+      "daniel barnett",
+      "daniel",
+      "barnett"
+    ]
+  },
+  {
+    "id": "connor-jollivet",
+    "name": "Connor Jollivet",
+    "aliases": [
+      "connor jollivet",
+      "jollivet"
+    ]
+  },
+  {
+    "id": "ben-christiansen",
+    "name": "Ben Christiansen",
+    "aliases": [
+      "ben christiansen",
+      "ben",
+      "christiansen"
+    ]
+  },
+  {
+    "id": "alex-waldron",
+    "name": "Alex Waldron",
+    "aliases": [
+      "alex waldron",
+      "alex",
+      "waldron"
+    ]
+  },
+  {
+    "id": "luke-wimbush",
+    "name": "Luke Wimbush",
+    "aliases": [
+      "luke wimbush",
+      "wimbush"
+    ]
+  },
+  {
+    "id": "nishil-patel",
+    "name": "Nishil Patel",
+    "aliases": [
+      "nishil patel",
+      "nishil"
+    ]
+  },
+  {
+    "id": "ojaswin-grover",
+    "name": "Ojaswin Grover",
+    "aliases": [
+      "ojaswin grover",
+      "ojaswin",
+      "grover"
+    ]
+  },
+  {
+    "id": "tane-evans-clarke",
+    "name": "Tane Evans-Clarke",
+    "aliases": [
+      "tane evans-clarke",
+      "tane",
+      "evans-clarke"
+    ]
+  },
+  {
+    "id": "jack-plowman",
+    "name": "Jack Plowman",
+    "aliases": [
+      "jack plowman",
+      "plowman"
+    ]
+  },
+  {
+    "id": "nick-rattray",
+    "name": "Nick Rattray",
+    "aliases": [
+      "nick rattray",
+      "rattray"
+    ]
+  },
+  {
+    "id": "thomas-raybould",
+    "name": "Thomas Raybould",
+    "aliases": [
+      "thomas raybould",
+      "raybould"
+    ]
+  },
+  {
+    "id": "connor-maccarthy-morrogh",
+    "name": "Connor MacCarthy-Morrogh",
+    "aliases": [
+      "connor maccarthy-morrogh",
+      "maccarthy-morrogh"
+    ]
+  },
+  {
+    "id": "ryan-coetzee",
+    "name": "Ryan Coetzee",
+    "aliases": [
+      "ryan coetzee",
+      "coetzee"
+    ]
+  },
+  {
+    "id": "jack-clark",
+    "name": "Jack Clark",
+    "aliases": [
+      "jack clark",
+      "clark"
+    ]
+  },
+  {
+    "id": "marco-otto",
+    "name": "Marco Otto",
+    "aliases": [
+      "marco otto",
+      "marco",
+      "otto"
+    ]
+  },
+  {
+    "id": "mclean-barclay",
+    "name": "Mclean Barclay",
+    "aliases": [
+      "mclean barclay",
+      "mclean",
+      "barclay"
+    ]
+  },
+  {
+    "id": "taylor-cansdale-griffin",
+    "name": "Taylor Cansdale-Griffin",
+    "aliases": [
+      "taylor cansdale-griffin",
+      "taylor",
+      "cansdale-griffin"
+    ]
+  },
+  {
+    "id": "kairav-nair",
+    "name": "Kairav Nair",
+    "aliases": [
+      "kairav nair",
+      "kairav",
+      "nair"
+    ]
+  },
+  {
+    "id": "shashen-wijesena",
+    "name": "Shashen Wijesena",
+    "aliases": [
+      "shashen wijesena",
+      "shashen",
+      "wijesena"
+    ]
+  },
+  {
+    "id": "janrik-van-wyk",
+    "name": "Janrik van Wyk",
+    "aliases": [
+      "janrik van wyk",
+      "janrik",
+      "van wyk"
+    ]
+  },
+  {
+    "id": "john-fitzgerald",
+    "name": "John Fitzgerald",
+    "aliases": [
+      "john fitzgerald",
+      "john",
+      "fitzgerald"
+    ]
+  },
+  {
+    "id": "luke-harrison",
+    "name": "Luke Harrison",
+    "aliases": [
+      "luke harrison",
+      "harrison"
+    ]
+  },
+  {
+    "id": "logan-ferguson",
+    "name": "Logan Ferguson",
+    "aliases": [
+      "logan ferguson",
+      "logan",
+      "ferguson"
+    ]
+  },
+  {
+    "id": "muhammad-shaikh",
+    "name": "Muhammad Shaikh",
+    "aliases": [
+      "muhammad shaikh",
+      "muhammad",
+      "shaikh"
+    ]
+  },
+  {
+    "id": "lachlan-nicoll",
+    "name": "Lachlan Nicoll",
+    "aliases": [
+      "lachlan nicoll",
+      "lachlan",
+      "nicoll"
+    ]
+  },
+  {
+    "id": "max-noll",
+    "name": "Max Noll",
+    "aliases": [
+      "max noll",
+      "max",
+      "noll"
+    ]
+  },
+  {
+    "id": "cooper-harrison-tubb",
+    "name": "Cooper Harrison-Tubb",
+    "aliases": [
+      "cooper harrison-tubb",
+      "cooper",
+      "harrison-tubb"
+    ]
+  },
+  {
+    "id": "anton-aickin",
+    "name": "Anton Aickin",
+    "aliases": [
+      "anton aickin",
+      "anton",
+      "aickin"
+    ]
+  },
+  {
+    "id": "lucas-peters",
+    "name": "Lucas Peters",
+    "aliases": [
+      "lucas peters",
+      "peters"
+    ]
+  },
+  {
+    "id": "ryan-johnson",
+    "name": "Ryan Johnson",
+    "aliases": [
+      "ryan johnson",
+      "johnson"
+    ]
+  },
+  {
+    "id": "shrikanth-kalyankumar",
+    "name": "Shrikanth Kalyankumar",
+    "aliases": [
+      "shrikanth kalyankumar",
+      "shrikanth",
+      "kalyankumar"
+    ]
+  },
+  {
+    "id": "alan-bailey",
+    "name": "Alan Bailey",
+    "aliases": [
+      "alan bailey",
+      "alan",
+      "bailey"
+    ]
+  },
+  {
+    "id": "eddie-biss",
+    "name": "Eddie Biss",
+    "aliases": [
+      "eddie biss",
+      "eddie",
+      "biss"
+    ]
+  },
+  {
+    "id": "nehal-naidoo",
+    "name": "Nehal Naidoo",
+    "aliases": [
+      "nehal naidoo",
+      "nehal",
+      "naidoo"
+    ]
+  },
+  {
+    "id": "ben-huntington",
+    "name": "Ben Huntington",
+    "aliases": [
+      "ben huntington",
+      "ben",
+      "huntington"
+    ]
+  }
+]
