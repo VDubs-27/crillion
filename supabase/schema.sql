@@ -1,5 +1,7 @@
 -- Daily Delivery schema. Anyone with the link can play (anonymous sign-ins).
 
+create extension if not exists fuzzystrmatch with schema extensions;
+
 -- Roster of answer options (seeded from content/players.json)
 create table players (
   id       text primary key,           -- 'marco-otto'
@@ -11,7 +13,7 @@ create table players (
 create table questions (
   date      date primary key,
   prompt    text not null,
-  answers   jsonb not null              -- [{ "player": "marco-otto", "runs": 6 }, ...]
+  answers   jsonb not null              -- [{ "player": "marco-otto", "runs": 6, "note": "..." }, ...]
 );
 
 -- One attempt per session per day
@@ -20,7 +22,8 @@ create table plays (
   date         date not null references questions(date),
   started_at   timestamptz not null default now(),
   answered_at  timestamptz,
-  guess        text references players(id),
+  guess        text references players(id),   -- matched answer, null if none
+  guess_text   text,                          -- what was typed
   runs         smallint check (runs in (0, 1, 2, 4, 6)),
   primary key (user_id, date)
 );
@@ -32,14 +35,13 @@ alter table plays     enable row level security;
 create policy "players read roster" on players for select to authenticated using (true);
 create policy "read own plays"      on plays   for select to authenticated using (user_id = auth.uid());
 
--- Table access for the API roles (RLS policies still decide which rows)
-grant usage on schema public to service_role, authenticated;
-
-grant all on players, questions, plays to service_role;   -- seed script
-grant select on players, plays to authenticated;          -- the app
-
 -- questions deliberately has NO policy: the browser can't read it at all.
 -- plays has no insert/update policy: only the game functions below write to it.
+
+-- Table access for the API roles (RLS policies still decide which rows)
+grant usage on schema public to service_role, authenticated;
+grant all on players, questions, plays to service_role;   -- seed script
+grant select on players, plays to authenticated;          -- the app
 
 -- Today's date in New Zealand (Supabase runs on UTC)
 create function today_nz()
@@ -88,17 +90,46 @@ begin
 end;
 $$;
 
--- Plays the shot. p_guess is a player id picked from the dropdown.
--- 20s on screen + 3s grace for slow connections.
-create function submit_answer(p_guess text)
+-- Lowercase and keep only letters/digits: "Na’il Moerat" → "nailmoerat"
+create or replace function norm_key(t text)
+returns text
+language sql
+immutable
+as $$
+  select regexp_replace(lower(t), '[^a-z0-9]', '', 'g')
+$$;
+
+-- Every way of naming each of a day's answers: full name, aliases and each word of the name
+create or replace function answer_keys(p_day date)
+returns table (player text, k text)
+language sql
+stable
+set search_path = public
+as $$
+  select distinct pl.id, norm_key(n)
+  from questions q
+  cross join lateral jsonb_array_elements(q.answers) a
+  join players pl on pl.id = a->>'player'
+  cross join lateral unnest(pl.aliases || pl.name || string_to_array(pl.name, ' ')) as n
+  where q.date = p_day
+    and length(norm_key(n)) >= 3
+$$;
+revoke execute on function answer_keys(date) from public, anon, authenticated;
+
+-- Plays the shot: matches what was typed against today's answers only.
+create function submit_answer(p_text text)
 returns jsonb
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_day  date := today_nz();
   v_play plays;
+  v_key  text := left(norm_key(coalesce(p_text, '')), 50);
+  v_max  int;
+  v_ids  text[];
+  v_pick text;
   v_runs smallint;
 begin
   select * into v_play from plays
@@ -114,25 +145,61 @@ begin
   if now() > v_play.started_at + interval '23 seconds' then
     return jsonb_build_object('out', true);
   end if;
-  if not exists (select 1 from players where id = p_guess) then
-    raise exception 'Unknown player';
+  if length(v_key) < 3 then
+    raise exception 'Type at least 3 letters';
+  end if;
+
+  -- 1. Exact first name, surname, full name or alias of one of today's answers
+  select array_agg(distinct player) into v_ids
+  from answer_keys(v_day)
+  where k = v_key;
+
+  -- 2. Otherwise a close typo: 1 letter off (4–7 letters typed) or 2 off (8+)
+  if v_ids is null and length(v_key) >= 4 then
+    v_max := case when length(v_key) >= 8 then 2 else 1 end;
+    with d as (
+      select player, min(levenshtein(k, v_key)) as dist
+      from answer_keys(v_day)
+      group by player
+    )
+    select array_agg(player) into v_ids
+    from d
+    where dist <= v_max
+      and dist = (select min(dist) from d);
+  end if;
+
+  -- Two answers fit equally well: ask for more, don't use up the shot
+  if array_length(v_ids, 1) > 1 then
+    return jsonb_build_object('ambiguous', true);
+  end if;
+
+  v_pick := v_ids[1];
+
+  -- Not one of today's answers: try again, shot not used up
+  if v_pick is null then
+    return jsonb_build_object('unrecognised', true);
   end if;
 
   select (a->>'runs')::smallint into v_runs
   from questions q, jsonb_array_elements(q.answers) a
-  where q.date = v_day and a->>'player' = p_guess;
+  where q.date = v_day and a->>'player' = v_pick;
 
   update plays
-  set answered_at = now(), guess = p_guess, runs = coalesce(v_runs, 0)
+  set answered_at = now(),
+      guess = v_pick,
+      guess_text = left(p_text, 80),
+      runs = coalesce(v_runs, 0)
   where user_id = auth.uid() and date = v_day;
 
   return jsonb_build_object(
     'out', false,
-    'runs', coalesce(v_runs, 0),
-    'valid', v_runs is not null
+    'runs', coalesce(v_runs, 0)
   );
 end;
 $$;
+
+revoke execute on function submit_answer(text) from public, anon;
+grant  execute on function submit_answer(text) to authenticated;
 
 -- The tier board. Only works once you've played (or timed out) today.
 create or replace function get_reveal()
@@ -157,6 +224,8 @@ begin
   select jsonb_build_object(
     'prompt', q.prompt,
     'your_guess', v_play.guess,
+    'your_guess_name', (select name from players where id = v_play.guess),
+    'your_guess_text', v_play.guess_text,
     'your_runs', v_play.runs,
     'out', v_play.answered_at is null,
     'played_today', (select count(*) from plays where date = v_day),
@@ -181,5 +250,5 @@ begin
 end;
 $$;
 
-revoke execute on function start_ball(), submit_answer(text), get_reveal() from public, anon;
-grant  execute on function start_ball(), submit_answer(text), get_reveal() to authenticated;
+revoke execute on function start_ball(), get_reveal() from public, anon;
+grant  execute on function start_ball(), get_reveal() to authenticated;
