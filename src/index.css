@@ -12,7 +12,13 @@
   --dot: #8A9A8E;       /* DOT */
   --two: #7FC8F8;       /* TWO, focus ring */
   --six: #FF7A45;       /* SIX, low timer */
-  --out: #EF6A52;       /* OUT */
+  --out: #9B111E;       /* OUT */
+  /* Tier colours: used for run numbers, headlines and the answer board */
+  --t0: #8fa3c4;        /* DOT */
+  --t1: #4de3ff;        /* SINGLE */
+  --t2: #ff5252;        /* TWO */
+  --t4: #9d7bff;        /* FOUR */
+  --t6: #ffd166;        /* SIX */
   --px: "Press Start 2P", ui-monospace, monospace;
   --body: "VT323", ui-monospace, monospace;
   color-scheme: dark;
@@ -97,11 +103,11 @@ html, body {
 .scene { display: block; width: 100%; height: auto; }
 
 /* Run colours */
-.r6 { color: var(--six); }
-.r4 { color: var(--amber); }
-.r2 { color: var(--two); }
-.r1 { color: var(--cream); }
-.r0 { color: var(--dot); }
+.r6 { color: var(--t6); }
+.r4 { color: var(--t4); }
+.r2 { color: var(--t2); }
+.r1 { color: var(--t1); }
+.r0 { color: var(--t0); }
 .rout { color: var(--out); }
 
 /* Home: scoring ladder */
@@ -160,22 +166,35 @@ html, body {
 .shot { font-size: 30px; line-height: 1; margin: 0; }
 
 .board { display: flex; flex-direction: column; gap: 6px; }
-.tier {
-  display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
-  padding: 10px;
-  background: var(--panel);
-}
+.tier { --tier: var(--cream); background: var(--panel); box-shadow: inset 4px 0 0 var(--tier); }
+.tier--r6 { --tier: var(--t6); }
+.tier--r4 { --tier: var(--t4); }
+.tier--r2 { --tier: var(--t2); }
+.tier--r1 { --tier: var(--t1); }
+.tier--r0 { --tier: var(--t0); }
 .tier--you { background: #22301F; }
-.tier__runs { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.tier__runs b { font-family: var(--px); font-size: 18px; font-weight: 400; }
-.tier__runs span { font-size: 17px; color: var(--muted); }
+.tier__summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px 12px;
+  cursor: pointer;
+  list-style: none;
+}
+.tier__summary::-webkit-details-marker { display: none; }
+.tier__summary b { font-family: var(--px); font-size: 18px; font-weight: 400; width: 28px; text-align: center; color: var(--tier); }
+.tier__name { flex: 1; font-size: 24px; color: var(--tier); }
+.you { color: var(--cream); }
+.tier__count { font-size: 19px; color: var(--muted); }
+.tier__chev { font-family: var(--px); font-size: 12px; color: var(--muted); }
+.tier[open] .tier__chev { transform: rotate(90deg); }
+.tier .chips { padding: 0 12px 12px 52px; }
+.tier .chip { background: var(--night); color: var(--tier); }  /* dark chip keeps the colours readable */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .chip { display: flex; flex-direction: column; padding: 4px 8px; background: var(--panel-2); font-size: 21px; }
 .chip small { font-size: 17px; color: var(--muted); }
-.chip--you { background: #3A2316; box-shadow: 0 0 0 2px var(--six); }
+.tier .chip--you { box-shadow: 0 0 0 2px var(--cream); }
 
 /* One moment of motion: the result lands */
 @media (prefers-reduced-motion: no-preference) {

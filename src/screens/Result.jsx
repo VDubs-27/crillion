@@ -57,23 +57,27 @@ export default function Result({ reveal }) {
           if (!rows.length) return null;
           const hasYou = rows.some((b) => b.player === reveal.your_guess);
           return (
-            <div key={tier.runs} className={`tier${hasYou ? " tier--you" : ""}`}>
-              <div className="tier__runs">
-                <b className={`r${tier.runs}`}>{tier.runs || "•"}</b>
-                <span>{tier.label}</span>
-              </div>
+            <details key={tier.runs} className={`tier tier--r${tier.runs}${hasYou ? " tier--you" : ""}`}>
+              <summary className="tier__summary">
+                <b>{tier.runs || "•"}</b>
+                <span className="tier__name">
+                  {tier.label}
+                  {hasYou && <span className="you"> · you</span>}
+                </span>
+                <span className="tier__count">
+                  {rows.length} {rows.length === 1 ? "answer" : "answers"}
+                </span>
+                <span className="tier__chev" aria-hidden="true">▸</span>
+              </summary>
               <ul className="chips">
                 {rows.map((b) => (
                   <li key={b.player} className={`chip${b.player === reveal.your_guess ? " chip--you" : ""}`}>
-                    <span>
-                      {b.name}
-                      {b.player === reveal.your_guess && <span className="r6"> · you</span>}
-                    </span>
+                    <span>{b.name}</span>
                     {b.note && <small>{b.note}</small>}
                   </li>
                 ))}
               </ul>
-            </div>
+            </details>
           );
         })}
       </section>
