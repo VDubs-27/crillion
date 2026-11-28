@@ -21,6 +21,11 @@ jobs:
 
       - run: npm ci
 
+      - name: Check secrets are set
+        run: |
+          echo "VITE_SUPABASE_URL set: ${{ secrets.VITE_SUPABASE_URL != '' }}"
+          echo "SUPABASE_SERVICE_ROLE_KEY set: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}"
+
       - run: node scripts/seed.mjs
         env:
           SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
