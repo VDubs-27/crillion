@@ -12,7 +12,7 @@
   --dot: #8A9A8E;       /* DOT */
   --two: #7FC8F8;       /* TWO, focus ring */
   --six: #FF7A45;       /* SIX, low timer */
-  --out: #9B111E;       /* OUT */
+  --out: #EF6A52;       /* OUT */
   /* Tier colours: used for run numbers, headlines and the answer board */
   --t0: #8fa3c4;        /* DOT */
   --t1: #4de3ff;        /* SINGLE */
@@ -217,8 +217,21 @@ html, body {
 @keyframes sa-caption { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
 
 /* Ball: bowled in from the right, bounces, then goes where the shot sends it */
-.sa-ball { animation: 1.6s steps(5) both; transform: translate(66px, 12px); }
-.sa-bat  { transform-origin: 23.5px 14.5px; animation: 1.6s steps(4) both; transform: rotate(-35deg); }
+/* Longhands on purpose: Vite's CSS minifier turns an "animation" shorthand
+   without a name into "animation: none", which drops the duration */
+.sa-ball {
+  transform: translate(66px, 12px);
+  animation-duration: 1.6s;
+  animation-timing-function: steps(5);
+  animation-fill-mode: both;
+}
+.sa-bat {
+  transform-origin: 23.5px 14.5px;
+  transform: rotate(-35deg);
+  animation-duration: 1.6s;
+  animation-timing-function: steps(4);
+  animation-fill-mode: both;
+}
 
 .shot-anim--r6   .sa-ball { animation-name: ball-6; }
 .shot-anim--r4   .sa-ball { animation-name: ball-4; }

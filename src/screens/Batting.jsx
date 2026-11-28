@@ -10,6 +10,7 @@ export default function Batting({ ball, shot, onCheck, onPlay, onTimeUp }) {
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(null); // { name, typed } waiting for confirmation
   const [busy, setBusy] = useState(false);
+  const [retries, setRetries] = useState(0); // bumps on each "try again"
   const done = useRef(false); // stops the timer and a submit both firing
   const inputRef = useRef(null);
 
@@ -26,6 +27,12 @@ export default function Batting({ ball, shot, onCheck, onPlay, onTimeUp }) {
     return () => clearInterval(id);
   }, [ball.started_at, onTimeUp]);
 
+  // After "Not recognised" / "Add their surname", select the text so the
+  // player can retype straight away. Runs after React has re-rendered.
+  useEffect(() => {
+    if (retries > 0) inputRef.current?.select();
+  }, [retries]);
+
   // When "Did you mean …?" appears, select the suggested name so
   // Enter confirms it and typing anything replaces it
   useEffect(() => {
@@ -35,7 +42,7 @@ export default function Batting({ ball, shot, onCheck, onPlay, onTimeUp }) {
   function retry(msg) {
     setMessage(msg);
     setBusy(false);
-    setTimeout(() => inputRef.current?.select(), 0); // ready to retype
+    setRetries((n) => n + 1);
   }
 
   function handleResult(result) {
@@ -112,7 +119,8 @@ export default function Batting({ ball, shot, onCheck, onPlay, onTimeUp }) {
           enterKeyHint="go"
           placeholder="Type a name"
           value={text}
-          disabled={busy || shot !== null}
+          readOnly={busy}           // keeps focus (and the phone keyboard) while checking
+          disabled={shot !== null}  // only fully disabled once the shot is played
           onChange={(e) => {
             setText(e.target.value);
             setMessage("");
