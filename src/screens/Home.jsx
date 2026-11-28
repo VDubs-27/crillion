@@ -20,9 +20,9 @@ export default function Home({ onFace }) {
       <GroundScene />
 
       <section className="panel">
-        <p className="label">Today’s ball</p>
+        <p className="label">The less obvious your answer, the more runs it’s worth.</p>
         <p className="shot">One question. 20 seconds. One shot.</p>
-        <p className="muted small">The less obvious your answer, the more runs it’s worth.</p>
+        <p className="muted small">NOTE! Only includes Westlakers who graduated between 2022 and 2024.</p>
       </section>
 
       <section className="field">
