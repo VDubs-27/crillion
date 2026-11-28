@@ -7,12 +7,11 @@
     { "player": "eddie-biss", "runs": 4 },
     { "player": "archie-postles", "runs": 4 },
     { "player": "jayin-bhatt", "runs": 4 },
-    { "player": "dominic-barker", "runs": 2 },
     { "player": "ryan-kirkpatrick", "runs": 2 },
     { "player": "thomas-raybould", "runs": 2 },
     { "player": "shahaab-sajjad", "runs": 1 },
-    { "player": "adnan-sajjad", "runs": 1 },
-    { "player": "ryan-johnson", "runs": 1 },
+    { "player": "dominic-barker", "runs": 1 },
+    { "player": "ryan-johnson", "runs": 0 },
     { "player": "alex-waldron", "runs": 0 }
   ]
 }
