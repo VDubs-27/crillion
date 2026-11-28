@@ -1,12 +1,15 @@
 // Loads content/ into Supabase.
-// Run: node --env-file=.env.seed scripts/seed.mjs
+// Run: node --env-file=.env scripts/seed.mjs
 import { readFileSync, readdirSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-);
+const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
+const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+if (!url || !key) {
+  throw new Error("Set VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY");
+}
+
+const supabase = createClient(url, key);
 
 const players = JSON.parse(readFileSync("content/players.json", "utf8"));
 const ids = new Set(players.map((p) => p.id));
