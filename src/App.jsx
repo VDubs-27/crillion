@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { supabase, ensureSession } from "./lib/supabase";
-import { nzToday, secondsLeft, sleep, GRACE_SECONDS } from "./lib/game";
+import { nzToday, secondsLeft, sleep, GRACE_SECONDS, SHOT_ANIMATION_MS } from "./lib/game";
 import Home from "./screens/Home";
 import Batting from "./screens/Batting";
 import Result from "./screens/Result";
 
 export default function App() {
-  // loading | home | batting | waiting | result | error
+  // loading | home | batting | result | error
   const [screen, setScreen] = useState("loading");
   const [ball, setBall] = useState(null);     // { prompt, started_at }
   const [reveal, setReveal] = useState(null); // get_reveal() result
+  const [shot, setShot] = useState(null);     // outcome being animated: 0–6 or "out"
   const [error, setError] = useState(null);
 
   // Runs an async action and sends any error to the error screen
@@ -35,11 +36,32 @@ export default function App() {
     setScreen("batting");
   }
 
-  // Clock hit zero: wait until the server also counts it as out, then reveal
+  // Plays the batter animation while fetching the reveal, then shows the result.
+  // waitMs delays the fetch (a timed-out ball isn't out on the server until 23s).
+  async function animateThenReveal(outcome, waitMs = 0) {
+    setShot(outcome);
+    const fetchReveal = (async () => {
+      await sleep(waitMs);
+      const { data, error } = await supabase.rpc("get_reveal");
+      if (error) throw error;
+      return data;
+    })();
+    const [data] = await Promise.all([fetchReveal, sleep(SHOT_ANIMATION_MS)]);
+    setReveal(data);
+    setScreen("result");
+  }
+
+  // Clock hit zero: the batter's bowled while the server catches up
   async function timeUp(startedAt) {
-    setScreen("waiting");
-    await sleep(Math.max(0, (secondsLeft(startedAt) + GRACE_SECONDS) * 1000));
-    await showReveal();
+    const waitMs = Math.max(0, (secondsLeft(startedAt) + GRACE_SECONDS) * 1000);
+    await animateThenReveal("out", waitMs);
+  }
+
+  // Asks the server who the typed text matches, without playing it
+  async function check(text) {
+    const { data, error } = await supabase.rpc("check_answer", { p_text: text });
+    if (error) throw error;
+    return data;
   }
 
   // Sends what was typed; the server matches it against today's answers only
@@ -48,7 +70,7 @@ export default function App() {
     if (error) throw error;
     if (data.ambiguous || data.unrecognised) return data; // stay on the ball, try again
     if (data.out) await timeUp(ball.started_at);          // arrived too late
-    else await showReveal();
+    else await animateThenReveal(data.runs);
     return data;
   }
 
@@ -70,11 +92,24 @@ export default function App() {
     })();
   }, []);
 
-  if (screen === "loading") return <p>Loading…</p>;
-  if (screen === "error") return <p role="alert">{error}</p>;
+  if (screen === "loading")
+    return (
+      <main className="screen screen--center">
+        <p className="label blink">Rolling the pitch…</p>
+      </main>
+    );
+  if (screen === "error")
+    return (
+      <main className="screen screen--center">
+        <section className="panel panel--out">
+          <p className="label">Rain delay</p>
+          <p className="shot" role="alert">{error}</p>
+        </section>
+        <button type="button" className="btn" onClick={() => window.location.reload()}>Try again</button>
+      </main>
+    );
   if (screen === "home") return <Home onFace={run(face)} />;
   if (screen === "batting")
-    return <Batting ball={ball} onPlay={run(play)} onTimeUp={run(timeUp)} />;
-  if (screen === "waiting") return <p>Checking the replay…</p>;
+    return <Batting ball={ball} shot={shot} onCheck={run(check)} onPlay={run(play)} onTimeUp={run(timeUp)} />;
   return <Result reveal={reveal} />;
 }

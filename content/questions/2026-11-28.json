@@ -3,6 +3,9 @@
   "prompt": "Test ball: name a player who's taken a 5-fer for Westlake.",
   "answers": [
     { "player": "marco-otto", "runs": 6, "note": "Test note" },
-    { "player": "sam-kay", "runs": 1 }
+    { "player": "dominic-barker", "runs": 4 },
+    { "player": "toby-douglas", "runs": 2 },
+    { "player": "ben-pleciak", "runs": 1 },
+    { "player": "sam-kay", "runs": 0 }
   ]
 }

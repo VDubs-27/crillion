@@ -1,5 +1,7 @@
 // Shared game constants and helpers
+export const GAME_NAME = "Daily Delivery";
 export const BALL_SECONDS = 20;
+export const SHOT_ANIMATION_MS = 2600; // batter animation before the result screen
 export const GRACE_SECONDS = 3.5; // server allows 23s; wait slightly longer before asking for the reveal
 
 export const TIERS = [
@@ -23,3 +25,13 @@ export function secondsLeft(startedAt) {
 }
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// e.g. "Sat 28 Nov", in New Zealand time
+export function nzDateLabel() {
+  return new Intl.DateTimeFormat("en-NZ", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    timeZone: "Pacific/Auckland",
+  }).format(new Date());
+}

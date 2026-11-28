@@ -116,20 +116,105 @@ as $$
 $$;
 revoke execute on function answer_keys(date) from public, anon, authenticated;
 
--- Plays the shot: matches what was typed against today's answers only.
-create function submit_answer(p_text text)
+-- Matches typed text to one of a day's answers. Returns their ids:
+-- null = no match, 1 id = match, 2+ ids = ambiguous.
+--   exact: first name, surname, full name or alias
+--   typo:  1 letter off (4–7 letters typed) or 2 off (8+)
+create or replace function match_answer(p_day date, p_text text)
+returns text[]
+language plpgsql
+stable
+set search_path = public, extensions
+as $$
+declare
+  v_key text := left(norm_key(coalesce(p_text, '')), 50);
+  v_max int;
+  v_ids text[];
+begin
+  if length(v_key) < 3 then
+    return null;
+  end if;
+
+  select array_agg(distinct player) into v_ids
+  from answer_keys(p_day)
+  where k = v_key;
+
+  if v_ids is null and length(v_key) >= 4 then
+    v_max := case when length(v_key) >= 8 then 2 else 1 end;
+    with d as (
+      select player, min(levenshtein(k, v_key)) as dist
+      from answer_keys(p_day)
+      group by player
+    )
+    select array_agg(player) into v_ids
+    from d
+    where dist <= v_max
+      and dist = (select min(dist) from d);
+  end if;
+
+  return v_ids;
+end;
+$$;
+revoke execute on function match_answer(date, text) from public, anon, authenticated;
+
+-- Checks a typed name without playing it, so the app can ask "Did you mean …?"
+create or replace function check_answer(p_text text)
 returns jsonb
 language plpgsql
 security definer
-set search_path = public, extensions
+set search_path = public
 as $$
 declare
   v_day  date := today_nz();
   v_play plays;
-  v_key  text := left(norm_key(coalesce(p_text, '')), 50);
-  v_max  int;
   v_ids  text[];
-  v_pick text;
+  v_name text;
+begin
+  select * into v_play from plays where user_id = auth.uid() and date = v_day;
+
+  if not found then
+    raise exception 'Face the ball first';
+  end if;
+  if v_play.answered_at is not null then
+    raise exception 'You''ve already played today';
+  end if;
+  if now() > v_play.started_at + interval '23 seconds' then
+    return jsonb_build_object('out', true);
+  end if;
+  if length(norm_key(coalesce(p_text, ''))) < 3 then
+    raise exception 'Type at least 3 letters';
+  end if;
+
+  v_ids := match_answer(v_day, p_text);
+
+  if v_ids is null then
+    return jsonb_build_object('unrecognised', true);
+  end if;
+  if array_length(v_ids, 1) > 1 then
+    return jsonb_build_object('ambiguous', true);
+  end if;
+
+  select name into v_name from players where id = v_ids[1];
+  return jsonb_build_object(
+    'match', true,
+    'name', v_name,
+    'exact', norm_key(v_name) = norm_key(p_text) -- typed the full name already
+  );
+end;
+$$;
+
+-- Plays the shot: matches what was typed against today's answers only.
+-- Unrecognised or ambiguous text doesn't use up the shot.
+create or replace function submit_answer(p_text text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_day  date := today_nz();
+  v_play plays;
+  v_ids  text[];
   v_runs smallint;
 begin
   select * into v_play from plays
@@ -145,61 +230,36 @@ begin
   if now() > v_play.started_at + interval '23 seconds' then
     return jsonb_build_object('out', true);
   end if;
-  if length(v_key) < 3 then
+  if length(norm_key(coalesce(p_text, ''))) < 3 then
     raise exception 'Type at least 3 letters';
   end if;
 
-  -- 1. Exact first name, surname, full name or alias of one of today's answers
-  select array_agg(distinct player) into v_ids
-  from answer_keys(v_day)
-  where k = v_key;
+  v_ids := match_answer(v_day, p_text);
 
-  -- 2. Otherwise a close typo: 1 letter off (4–7 letters typed) or 2 off (8+)
-  if v_ids is null and length(v_key) >= 4 then
-    v_max := case when length(v_key) >= 8 then 2 else 1 end;
-    with d as (
-      select player, min(levenshtein(k, v_key)) as dist
-      from answer_keys(v_day)
-      group by player
-    )
-    select array_agg(player) into v_ids
-    from d
-    where dist <= v_max
-      and dist = (select min(dist) from d);
+  if v_ids is null then
+    return jsonb_build_object('unrecognised', true);
   end if;
-
-  -- Two answers fit equally well: ask for more, don't use up the shot
   if array_length(v_ids, 1) > 1 then
     return jsonb_build_object('ambiguous', true);
   end if;
 
-  v_pick := v_ids[1];
-
-  -- Not one of today's answers: try again, shot not used up
-  if v_pick is null then
-    return jsonb_build_object('unrecognised', true);
-  end if;
-
   select (a->>'runs')::smallint into v_runs
   from questions q, jsonb_array_elements(q.answers) a
-  where q.date = v_day and a->>'player' = v_pick;
+  where q.date = v_day and a->>'player' = v_ids[1];
 
   update plays
   set answered_at = now(),
-      guess = v_pick,
+      guess = v_ids[1],
       guess_text = left(p_text, 80),
-      runs = coalesce(v_runs, 0)
+      runs = v_runs
   where user_id = auth.uid() and date = v_day;
 
-  return jsonb_build_object(
-    'out', false,
-    'runs', coalesce(v_runs, 0)
-  );
+  return jsonb_build_object('out', false, 'runs', v_runs);
 end;
 $$;
 
-revoke execute on function submit_answer(text) from public, anon;
-grant  execute on function submit_answer(text) to authenticated;
+revoke execute on function check_answer(text), submit_answer(text) from public, anon;
+grant  execute on function check_answer(text), submit_answer(text) to authenticated;
 
 -- The tier board. Only works once you've played (or timed out) today.
 create or replace function get_reveal()

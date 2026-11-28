@@ -1,111 +1,259 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap");
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --night: #0F1D14;     /* page */
+  --panel: #1B3324;     /* cards */
+  --panel-2: #24402C;   /* chips, empty segments */
+  --led: #050B07;       /* timer, input */
+  --cream: #F2E8CF;     /* text, panel edges */
+  --muted: #A9BFA9;
+  --amber: #FFC94A;     /* buttons, timer, FOUR */
+  --amber-dark: #A87A12;
+  --dot: #8A9A8E;       /* DOT */
+  --two: #7FC8F8;       /* TWO, focus ring */
+  --six: #FF7A45;       /* SIX, low timer */
+  --out: #EF6A52;       /* OUT */
+  --px: "Press Start 2P", ui-monospace, monospace;
+  --body: "VT323", ui-monospace, monospace;
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+* { box-sizing: border-box; }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-body {
+html, body {
   margin: 0;
+  background: var(--night);
+  color: var(--cream);
+  font-family: var(--body);
+  font-size: 22px;
+  line-height: 1.15;
+  -webkit-font-smoothing: none;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
+:focus-visible { outline: 3px solid var(--two); outline-offset: 3px; }
+
+/* Layout */
+.screen {
+  max-width: 430px;
+  min-height: 100dvh;
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  padding: calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  gap: 20px;
 }
+.screen--center { justify-content: center; align-items: center; text-align: center; }
+.screen p, .screen h1 { margin: 0; }
+.grow { flex: 1; }
+.spacer { flex: 1; }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
+/* Type */
+.label { font-family: var(--px); font-size: 10px; color: var(--muted); margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 19px; }
+.center { text-align: center; }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+/* Header */
+.header { display: flex; justify-content: space-between; align-items: flex-end; }
+.brand { font-family: var(--px); font-size: 16px; line-height: 1.5; color: var(--amber); margin: 0; font-weight: 400; }
+
+/* Pixel panels: notched corners come from four offset shadows */
+.panel {
+  --edge: var(--cream);
+  margin: 4px;
+  padding: 16px;
+  background: var(--panel);
+  box-shadow: 0 -4px 0 0 var(--edge), 0 4px 0 0 var(--edge), -4px 0 0 0 var(--edge), 4px 0 0 0 var(--edge);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+.panel--led { --edge: #4A5F50; background: var(--led); }
+.panel--out { --edge: var(--out); }
+
+/* Buttons */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 56px;
+  margin-bottom: 6px;
+  border: 0;
+  border-radius: 0;
+  background: var(--amber);
+  color: var(--night);
+  font-family: var(--px);
+  font-size: 14px;
+  box-shadow: 0 6px 0 0 var(--amber-dark);
+  cursor: pointer;
 }
-p {
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 2px 0 0 var(--amber-dark); }
+.btn:disabled { opacity: 0.6; cursor: default; }
+.btn--confirm { background: var(--cream); box-shadow: 0 6px 0 0 #8C8470; }
+.btn--confirm:active:not(:disabled) { box-shadow: 0 2px 0 0 #8C8470; }
+
+/* Pixel art */
+.scene { display: block; width: 100%; height: auto; }
+
+/* Run colours */
+.r6 { color: var(--six); }
+.r4 { color: var(--amber); }
+.r2 { color: var(--two); }
+.r1 { color: var(--cream); }
+.r0 { color: var(--dot); }
+.rout { color: var(--out); }
+
+/* Home: scoring ladder */
+.ladder { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.ladder > div {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 10px 2px; background: var(--panel);
+}
+.ladder b { font-family: var(--px); font-size: 14px; font-weight: 400; }
+.ladder span { font-size: 18px; color: var(--muted); }
+.ends { display: flex; justify-content: space-between; font-size: 18px; color: var(--muted); }
+
+/* Batting: scoreboard timer */
+.timer { align-items: center; gap: 12px; }
+.timer__digits {
+  font-family: var(--px); font-size: 44px; color: var(--amber);
+  text-shadow: 0 0 12px rgba(255, 201, 74, 0.45);
+}
+.timer__bar { display: grid; grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 3px; width: 100%; }
+.timer__bar i { height: 10px; background: var(--panel-2); }
+.timer__bar i.on { background: var(--amber); }
+.timer.is-low .timer__digits { color: var(--six); text-shadow: 0 0 12px rgba(255, 122, 69, 0.5); }
+.timer.is-low .timer__bar i.on { background: var(--six); }
+
+.prompt { margin: 0; font-size: 32px; line-height: 1.05; font-weight: 400; }
+
+/* Batting: answer box */
+.field { display: flex; flex-direction: column; gap: 10px; }
+.input {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 14px;
+  border: 4px solid var(--amber);
+  border-radius: 0;
+  background: var(--led);
+  color: var(--cream);
+  font-family: var(--body);
+  font-size: 28px;
+}
+.input:focus-visible { outline: none; border-color: var(--cream); }
+.input:disabled { opacity: 0.7; }
+.status { margin: 0; font-size: 21px; }
+.status--warn { color: var(--out); }
+.status--suggest { color: var(--amber); }
+
+/* Result */
+.headline {
   margin: 0;
+  font-family: var(--px);
+  font-weight: 400;
+  font-size: clamp(40px, 14vw, 56px);
+  text-align: center;
+  text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+}
+.sub { margin: 0; text-align: center; font-size: 24px; color: var(--muted); }
+.shot { font-size: 30px; line-height: 1; margin: 0; }
+
+.board { display: flex; flex-direction: column; gap: 6px; }
+.tier {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  background: var(--panel);
+}
+.tier--you { background: #22301F; }
+.tier__runs { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.tier__runs b { font-family: var(--px); font-size: 18px; font-weight: 400; }
+.tier__runs span { font-size: 17px; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.chip { display: flex; flex-direction: column; padding: 4px 8px; background: var(--panel-2); font-size: 21px; }
+.chip small { font-size: 17px; color: var(--muted); }
+.chip--you { background: #3A2316; box-shadow: 0 0 0 2px var(--six); }
+
+/* One moment of motion: the result lands */
+@media (prefers-reduced-motion: no-preference) {
+  .headline { animation: land 0.4s steps(4) both; }
+  .blink { animation: blink 1s steps(2) infinite; }
+}
+@keyframes land { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ---------- Shot animation (Batting screen, after answering) ---------- */
+.shot-anim { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.shot-anim .scene { margin: 0 4px; }
+.shot-anim g { transform-box: view-box; }
+.shot-anim__caption {
+  font-family: var(--px);
+  font-size: 28px;
+  opacity: 0;
+  animation: sa-caption 0.3s steps(3) 1.1s both;
+}
+@keyframes sa-caption { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+
+/* Ball: bowled in from the right, bounces, then goes where the shot sends it */
+.sa-ball { animation: 1.6s steps(5) both; transform: translate(66px, 12px); }
+.sa-bat  { transform-origin: 23.5px 14.5px; animation: 1.6s steps(4) both; transform: rotate(-35deg); }
+
+.shot-anim--r6   .sa-ball { animation-name: ball-6; }
+.shot-anim--r4   .sa-ball { animation-name: ball-4; }
+.shot-anim--r2   .sa-ball { animation-name: ball-2; }
+.shot-anim--r1   .sa-ball { animation-name: ball-1; }
+.shot-anim--r0   .sa-ball { animation-name: ball-0; }
+.shot-anim--out  .sa-ball { animation-name: ball-out; }
+
+.shot-anim--r6 .sa-bat, .shot-anim--r4 .sa-bat { animation-name: bat-drive; }
+.shot-anim--r2 .sa-bat, .shot-anim--r1 .sa-bat { animation-name: bat-push; }
+.shot-anim--r0 .sa-bat { animation-name: bat-block; }
+/* timed out: the batter never moves */
+
+@keyframes ball-6 {
+  0% { transform: translate(66px, 12px); } 25% { transform: translate(44px, 20px); } 40% { transform: translate(25px, 15px); }
+  55% { transform: translate(40px, 4px); } 75% { transform: translate(58px, -3px); } 100% { transform: translate(76px, -10px); }
+}
+@keyframes ball-4 {
+  0% { transform: translate(66px, 12px); } 25% { transform: translate(44px, 20px); } 40% { transform: translate(25px, 15px); }
+  55% { transform: translate(36px, 20px); } 100% { transform: translate(70px, 20px); }
+}
+@keyframes ball-2 {
+  0% { transform: translate(66px, 12px); } 25% { transform: translate(44px, 20px); } 40% { transform: translate(25px, 15px); }
+  65% { transform: translate(36px, 20px); } 100% { transform: translate(46px, 20px); }
+}
+@keyframes ball-1 {
+  0% { transform: translate(66px, 12px); } 25% { transform: translate(44px, 20px); } 40% { transform: translate(25px, 15px); }
+  65% { transform: translate(31px, 20px); } 100% { transform: translate(34px, 20px); }
+}
+@keyframes ball-0 {
+  0% { transform: translate(66px, 12px); } 25% { transform: translate(44px, 20px); } 40% { transform: translate(25px, 15px); }
+  50% { transform: translate(25px, 20px); } 100% { transform: translate(26px, 20px); }
+}
+@keyframes ball-out {
+  0% { transform: translate(66px, 12px); } 25% { transform: translate(44px, 20px); } 55% { transform: translate(14px, 16px); }
+  100% { transform: translate(11px, 20px); }
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
+@keyframes bat-drive { 0%, 30% { transform: rotate(-35deg); } 38% { transform: rotate(-80deg); } 48%, 100% { transform: rotate(95deg); } }
+@keyframes bat-push  { 0%, 32% { transform: rotate(-35deg); } 40% { transform: rotate(-50deg); } 50%, 100% { transform: rotate(35deg); } }
+@keyframes bat-block { 0%, 32% { transform: rotate(-35deg); } 42%, 100% { transform: rotate(-5deg); } }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* OUT: stumps knocked back, bails fly */
+.shot-anim .sa-stump { transform-box: fill-box; transform-origin: center bottom; }
+.shot-anim--out .sa-stump--1 { animation: stump-1 1.6s steps(3) both; }
+.shot-anim--out .sa-stump--2 { animation: stump-2 1.6s steps(3) both; }
+.shot-anim--out .sa-bail--1  { animation: bail-1 1.6s steps(4) both; }
+.shot-anim--out .sa-bail--2  { animation: bail-2 1.6s steps(4) both; }
+@keyframes stump-1 { 0%, 55% { transform: none; } 75%, 100% { transform: rotate(-35deg); } }
+@keyframes stump-2 { 0%, 55% { transform: none; } 75%, 100% { transform: rotate(-20deg); } }
+@keyframes bail-1  { 0%, 55% { transform: none; } 75% { transform: translate(-5px, -8px); } 100% { transform: translate(-9px, -4px); } }
+@keyframes bail-2  { 0%, 55% { transform: none; } 75% { transform: translate(3px, -9px); } 100% { transform: translate(6px, -5px); } }
+
+/* Reduced motion: jump straight to the final frame */
+@media (prefers-reduced-motion: reduce) {
+  .shot-anim *, .shot-anim__caption { animation-duration: 1ms !important; animation-delay: 0ms !important; }
 }
